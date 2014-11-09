@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QTextEdit>
+#include <QScrollBar>
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
@@ -51,9 +52,11 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     aClearSearch->setIcon(QIcon(":/resources/icon_clearsearch.svg"));
     connect(aClearSearch, SIGNAL(triggered()), this, SLOT(actClearSearch()));
 
-    searchLabel = new QLabel();
+    //searchLabel = new QLabel();
     searchEdit = new SearchLineEdit;
-    searchLabel->setBuddy(searchEdit);
+    searchEdit->addAction(QIcon(":/resources/icon_search_black.svg"), QLineEdit::LeadingPosition);
+    searchEdit->setObjectName("searchEdit");
+    //searchLabel->setBuddy(searchEdit);
     setFocusProxy(searchEdit);
     setFocusPolicy(Qt::ClickFocus);
 
@@ -73,7 +76,7 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
 
     QHBoxLayout *searchLayout = new QHBoxLayout;
     searchLayout->addWidget(deckEditToolBar);
-    searchLayout->addWidget(searchLabel);
+    //searchLayout->addWidget(searchLabel);
     searchLayout->addWidget(searchEdit);
 
     databaseModel = new CardDatabaseModel(db, this);
@@ -91,6 +94,11 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     databaseView->setSortingEnabled(true);
     databaseView->sortByColumn(0, Qt::AscendingOrder);
     databaseView->resizeColumnToContents(0);
+    databaseView->resizeColumnToContents(3);
+    databaseView->setObjectName("databaseView");
+    databaseView->header()->setObjectName("databaseViewHeader");
+
+
     connect(databaseView->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateCardInfoLeft(const QModelIndex &, const QModelIndex &)));
     connect(databaseView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(actAddCard()));
     searchEdit->setTreeView(databaseView);
@@ -114,7 +122,7 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     filterView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(filterModel, SIGNAL(layoutChanged()), filterView, SLOT(expandAll()));
     connect(filterView, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(filterViewCustomContextMenu(const QPoint &)));
+        this, SLOT(filterViewCustomContextMenu(const QPoint &)));
     FilterBuilder *filterBuilder = new FilterBuilder;
     filterBuilder->setMaximumWidth(250);
     connect(filterBuilder, SIGNAL(add(const CardFilter *)), filterModel, SLOT(addFilter(const CardFilter *)));
@@ -211,7 +219,7 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     aSaveDeck->setShortcuts(QKeySequence::Save);
     connect(aSaveDeck, SIGNAL(triggered()), this, SLOT(actSaveDeck()));
     aSaveDeckAs = new QAction(QString(), this);
-//    aSaveDeckAs->setShortcuts(QKeySequence::SaveAs);
+    //    aSaveDeckAs->setShortcuts(QKeySequence::SaveAs);
     connect(aSaveDeckAs, SIGNAL(triggered()), this, SLOT(actSaveDeckAs()));
     aLoadDeckFromClipboard = new QAction(QString(), this);
     connect(aLoadDeckFromClipboard, SIGNAL(triggered()), this, SLOT(actLoadDeckFromClipboard()));
@@ -257,19 +265,19 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     addTabMenu(dbMenu);
 
     aAddCard = new QAction(QString(), this);
-    aAddCard->setIcon(QIcon(":/resources/arrow_right_green.svg"));
+    aAddCard->setIcon(QIcon(":/resources/arrow_right_white.svg"));
     connect(aAddCard, SIGNAL(triggered()), this, SLOT(actAddCard()));
     aAddCardToSideboard = new QAction(QString(), this);
-    aAddCardToSideboard->setIcon(QIcon(":/resources/add_to_sideboard.svg"));
+    aAddCardToSideboard->setIcon(QIcon(":/resources/add_to_sideboard_white.svg"));
     connect(aAddCardToSideboard, SIGNAL(triggered()), this, SLOT(actAddCardToSideboard()));
     aRemoveCard = new QAction(QString(), this);
-    aRemoveCard->setIcon(QIcon(":/resources/remove_row.svg"));
+    aRemoveCard->setIcon(QIcon(":/resources/remove_row_white.svg"));
     connect(aRemoveCard, SIGNAL(triggered()), this, SLOT(actRemoveCard()));
     aIncrement = new QAction(QString(), this);
-    aIncrement->setIcon(QIcon(":/resources/increment.svg"));
+    aIncrement->setIcon(QIcon(":/resources/increment_white.svg"));
     connect(aIncrement, SIGNAL(triggered()), this, SLOT(actIncrement()));
     aDecrement = new QAction(QString(), this);
-    aDecrement->setIcon(QIcon(":/resources/decrement.svg"));
+    aDecrement->setIcon(QIcon(":/resources/decrement_white.svg"));
     connect(aDecrement, SIGNAL(triggered()), this, SLOT(actDecrement()));
 
     deckEditToolBar->addAction(aAddCard);
@@ -278,9 +286,170 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     deckEditToolBar->addAction(aIncrement);
     deckEditToolBar->addAction(aDecrement);
     deckEditToolBar->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    
+
+    // experimental code for setting tab colors with css
+
+    QString styleWhite = "#DFE0E5";
+    QString styleDark = "#121314";
+    QString styleMedDark = "#222326";
+    QString styleLightDark = "#7B7D80";
+
+
+    tabSupervisor->setStyleSheet("background-color:#222326;");
+
+
+    QString style =  
+        // Text edits (like deck comments)
+        "QTextEdit"
+        "{"
+        "background:"+ styleWhite + ";"
+        "padding:0px 5px; "
+        "}"
+        "QTextEdit:focus"
+        "{"
+        "background:white;"
+        "}"
+        // line edits (like deck name)
+        "QLineEdit"
+        "{"
+        "background:"+ styleWhite + ";"
+        "padding:0px 5px; "
+        "}"
+        "QLineEdit:focus"
+        "{"
+        "background:white;"
+        "}"
+        // labels
+        "QLabel"
+        "{"
+        "color: "+ styleLightDark + ";" // font color
+        "font:10pt \"Verdana\";"
+        "}"
+        // search bar
+        "QLineEdit#searchEdit"
+        "{"
+        "background:"+ styleWhite + ";"
+        "border-radius: 13px;"
+        "padding:5px 0px; "
+        "}"
+
+        "QLineEdit:focus#searchEdit"
+        "{"
+        "background:white;"
+        "}"
+
+        // database 
+        "QTreeView "
+        "{"
+        "color: "+ styleWhite + ";" // font color
+        "font:10pt \"Verdana\";"
+        "background-color: " + styleDark + ";" 
+        "alternate-background-color: " + styleDark + ";"
+        "outline:none;"
+        "border:none;"
+        "}"
+
+        // database item
+        "QTreeView:item" 
+        "{"
+        "border-top: 1px solid " + styleMedDark + ";" // boarder between cells
+        "padding-bottom: 4px;"
+        "padding-top: 4px;"
+        "}"
+
+        // selected database item
+        "QTreeView:item:selected" 
+        "{"
+        "background-color:" + styleMedDark + ";"
+        "}"
+
+        "QTreeView:item:disabled" 
+        "{"
+        "color: "+ styleWhite + ";" // font color
+        "}"
+
+        // database header
+        "QHeaderView::section"
+        "{"
+        "background-color: " + styleDark + ";"
+        "text-transform: uppercase;"
+        "font:10pt \"Verdana\";"
+        "color: " + styleLightDark + ";"
+        "padding-left: 6px;"
+        "padding-bottom: 6px;"
+        "padding-top: 10px;"
+        "border-right: 1px solid " + styleMedDark + ";"
+        "}"
+
+        "QHeaderView::section:hover"
+        "{"
+        "color: " + styleWhite + ";"
+        "}"
+
+        // scroll bar
+        "QScrollBar:vertical {"
+        "    background:#1B1C1F;"
+        "    width:12px;    "
+        "    margin: 0px 0px 0px 0px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "    background: #323335;"
+        "    min-height: 20px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::add-line:vertical {"
+        "    background: none;"
+        "    height: 0px;"
+        "    subcontrol-position: bottom;"
+        "    subcontrol-origin: margin;"
+        "}"
+        "QScrollBar::sub-line:vertical {"
+        "    background: none;"
+        "    height: 0px;"
+        "    subcontrol-position: top;"
+        "    subcontrol-origin: margin;"
+        "}"
+        "QScrollBar::add-page:vertical {"
+        "    background: none;"
+        "}"
+        "QScrollBar::sub-page:vertical {"
+        "    background: none;"
+        "}"
+
+        "QScrollBar:horizontal {"
+        "    background:#1B1C1F;"
+        "    height:12px;    "
+        "    margin: 0px 0px 0px 0px;"
+        "}"
+        "QScrollBar::handle:horizontal {"
+        "    background: #323335;"
+        //"    min-width: 20px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::add-line:horizontal {"
+        "    background: none;"
+        "    height: 0px;"
+        "    subcontrol-position: bottom;"
+        "    subcontrol-origin: margin;"
+        "}"
+        "QScrollBar::sub-line:horizontal {"
+        "    background: none;"
+        "    height: 0px;"
+        "    subcontrol-position: top;"
+        "    subcontrol-origin: margin;"
+        "}"
+        "QScrollBar::add-page:horizontal {"
+        "    background: none;"
+        "}"
+        "QScrollBar::sub-page:horizontal {"
+        "    background: none;"
+        "}"
+        ;
+
+    this->setStyleSheet(style);
+
     retranslateUi();
-    
+
     resize(950, 700);
 }
 
@@ -293,12 +462,12 @@ void TabDeckEditor::retranslateUi()
 {
     aCardTextOnly->setText(tr("Show card text only"));
     aClearSearch->setText(tr("&Clear search"));
-    searchLabel->setText(tr("&Search for:"));
-    
+    //searchLabel->setText(tr("&Search for:"));
+
     nameLabel->setText(tr("Deck &name:"));
     commentsLabel->setText(tr("&Comments:"));
     hashLabel1->setText(tr("Hash:"));
-    
+
     aUpdatePrices->setText(tr("&Update prices"));
     aUpdatePrices->setShortcut(tr("Ctrl+U"));
 
@@ -312,7 +481,7 @@ void TabDeckEditor::retranslateUi()
     aAnalyzeDeck->setText(tr("&Analyze deck on deckstats.net"));
     aClose->setText(tr("&Close"));
     aClose->setShortcut(tr("Ctrl+Q"));
-    
+
     aAddCard->setText(tr("Add card to &maindeck"));
     aAddCardToSideboard->setText(tr("Add card to &sideboard"));
 
@@ -322,10 +491,10 @@ void TabDeckEditor::retranslateUi()
     aIncrement->setShortcut(tr("+"));
     aDecrement->setText(tr("&Decrement number"));
     aDecrement->setShortcut(tr("-"));
-    
+
     deckMenu->setTitle(tr("&Deck editor"));
     dbMenu->setTitle(tr("C&ard database"));
-    
+
     aEditSets->setText(tr("&Edit sets..."));
     aEditTokens->setText(tr("Edit &tokens..."));
 }
@@ -421,7 +590,7 @@ void TabDeckEditor::actLoadDeck()
 
     QString fileName = dialog.selectedFiles().at(0);
     DeckLoader::FileFormat fmt = DeckLoader::getFormatFromName(fileName);
-    
+
     DeckLoader *l = new DeckLoader;
     if (l->loadFromFile(fileName, fmt))
         setDeck(l);
@@ -444,11 +613,11 @@ bool TabDeckEditor::actSaveDeck()
         Command_DeckUpload cmd;
         cmd.set_deck_id(deck->getLastRemoteDeckId());
         cmd.set_deck_list(deck->writeToString_Native().toStdString());
-        
+
         PendingCommand *pend = AbstractClient::prepareSessionCommand(cmd);
         connect(pend, SIGNAL(finished(Response, CommandContainer, QVariant)), this, SLOT(saveDeckRemoteFinished(Response)));
         tabSupervisor->getClient()->sendCommand(pend);
-        
+
         return true;
     } else if (deck->getLastFileName().isEmpty())
         return actSaveDeckAs();
@@ -487,11 +656,11 @@ void TabDeckEditor::actLoadDeckFromClipboard()
 {
     if (!confirmClose())
         return;
-    
+
     DlgLoadDeckFromClipboard dlg;
     if (!dlg.exec())
         return;
-    
+
     setDeck(dlg.getDeckList());
     setModified(true);
 }
@@ -517,7 +686,7 @@ void TabDeckEditor::actAnalyzeDeck()
     DeckStatsInterface *interface = new DeckStatsInterface(
         *databaseModel->getDatabase(),
         this
-    ); // it deletes itself when done
+        ); // it deletes itself when done
     interface->analyzeDeck(deckModel->getDeckList());
 }
 
@@ -553,7 +722,7 @@ CardInfo *TabDeckEditor::currentCardInfo() const
     if (!currentIndex.isValid())
         return NULL;
     const QString cardName = currentIndex.sibling(currentIndex.row(), 0).data().toString();
-    
+
     return db->getCard(cardName);
 }
 
@@ -581,7 +750,7 @@ void TabDeckEditor::actSwapCard()
     const QString cardName = currentIndex.sibling(currentIndex.row(), 1).data().toString();
     const QModelIndex gparent = currentIndex.parent().parent();
     if (!gparent.isValid())
-            return;
+        return;
 
     const QString zoneName = gparent.sibling(gparent.row(), 1).data().toString();
     actDecrement();
@@ -679,15 +848,15 @@ void TabDeckEditor::actUpdatePrices()
 
     switch(settingsCache->getPriceTagSource())
     {
-        case AbstractPriceUpdater::DBPriceSource:
-            up = new DBPriceUpdater(deckModel->getDeckList());
-            break;
-        case AbstractPriceUpdater::BLPPriceSource:
-        default:
-            up = new BLPPriceUpdater(deckModel->getDeckList());
-            break;
+    case AbstractPriceUpdater::DBPriceSource:
+        up = new DBPriceUpdater(deckModel->getDeckList());
+        break;
+    case AbstractPriceUpdater::BLPPriceSource:
+    default:
+        up = new BLPPriceUpdater(deckModel->getDeckList());
+        break;
     }
-     
+
     connect(up, SIGNAL(finishedUpdate()), this, SLOT(finishedUpdatingPrices()));
     up->updatePrices();
 }
@@ -733,7 +902,7 @@ void TabDeckEditor::filterViewCustomContextMenu(const QPoint &point) {
     action = menu.addAction(QString("delete"));
     action->setData(point);
     connect(&menu, SIGNAL(triggered(QAction *)),
-            this, SLOT(filterRemove(QAction *)));
+        this, SLOT(filterRemove(QAction *)));
     menu.exec(filterView->mapToGlobal(point));
 }
 
