@@ -101,15 +101,15 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
     if (tabSupervisor && tabSupervisor->getUserInfo() && (sender == QString::fromStdString(tabSupervisor->getUserInfo()->name()))) {
         senderFormat.setFontWeight(QFont::Bold);
         senderFormat.setForeground(Qt::red);
-    } else if(userLevel.testFlag(ServerInfo_User::IsModerator)) {
-        // moderators have different colored screen names
-        senderFormat.setFontWeight(QFont::Bold);
-        senderFormat.setForeground(Qt::black);
-    }else {
+    } else {
         senderFormat.setForeground(Qt::blue);
         if (playerBold)
             senderFormat.setFontWeight(QFont::Bold);
     }
+    if(userLevel.testFlag(ServerInfo_User::IsModerator)) {
+        senderFormat.setFontWeight(QFont::Bold);
+    }
+
     senderFormat.setAnchor(true);
     senderFormat.setAnchorHref("user://" + QString::number(userLevel) + "_" + sender);
     if (!sameSender) {
@@ -174,7 +174,7 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
     // todo need to split the string into an array of strings that would look like:
     //[that is amazing ]
     //[:D]
-    //[where can i get one]
+    //[ where can i get one ]
     //[:P]
     // this can then be fed to the cursor and the smileys swapped out
     if(message.contains(":D")) {
