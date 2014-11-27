@@ -94,14 +94,18 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
         QTextCharFormat timeFormat;
         timeFormat.setForeground(Qt::black);
         cursor.setCharFormat(timeFormat);
-        cursor.insertText(QDateTime::currentDateTime().toString("[hh:mm] "));
+        cursor.insertText(QDateTime::currentDateTime().toString("[hh:mm:ss] "));
     }
     
     QTextCharFormat senderFormat;
     if (tabSupervisor && tabSupervisor->getUserInfo() && (sender == QString::fromStdString(tabSupervisor->getUserInfo()->name()))) {
         senderFormat.setFontWeight(QFont::Bold);
         senderFormat.setForeground(Qt::red);
-    } else {
+    } else if(userLevel.testFlag(ServerInfo_User::IsModerator)) {
+        // moderators have different colored screen names
+        senderFormat.setFontWeight(QFont::Bold);
+        senderFormat.setForeground(Qt::black);
+    }else {
         senderFormat.setForeground(Qt::blue);
         if (playerBold)
             senderFormat.setFontWeight(QFont::Bold);
@@ -166,6 +170,19 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
         } else
             from = 1;
     }
+
+    // todo need to split the string into an array of strings that would look like:
+    //[that is amazing ]
+    //[:D]
+    //[where can i get one]
+    //[:P]
+    // this can then be fed to the cursor and the smileys swapped out
+    if(message.contains(":D")) {
+        const int pixelSize = QFontInfo(cursor.charFormat().font()).pixelSize();
+        cursor.insertImage(SmileyPixmapGenerator::generatePixmap(pixelSize, ":D").toImage());
+        message.remove(":D");
+    }
+
     if (!message.isEmpty())
         cursor.insertText(message);
     

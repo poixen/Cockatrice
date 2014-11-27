@@ -5,6 +5,19 @@
 #include <sstream>
 #include <time.h>
 
+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
+#include <inttypes.h>
+#elif defined(_MSC_VER) || defined(__BORLANDC__)
+typedef unsigned int uint32_t;
+typedef unsigned __int64 uint64_t;
+#define inline __inline
+#else
+#include <inttypes.h>
+#if defined(__GNUC__)
+#define inline __inline__
+#endif
+#endif
+
 namespace {
     const unsigned SECS_PER_MIN  = 60;
     const unsigned SECS_PER_HOUR = 60 * 60;

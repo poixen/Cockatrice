@@ -126,5 +126,14 @@
 
     <file>resources/news/exclamation_mark.svg</file>
     <file>resources/news/question_mark.svg</file>
+    
+    <file>resources/smileys/cheeky.svg</file>
+    <file>resources/smileys/laugh.svg</file>
+    <file>resources/smileys/sad.svg</file>
+    <file>resources/smileys/shock.svg</file>
+    <file>resources/smileys/smile.svg</file>
+    <file>resources/smileys/xcheeky.svg</file>
+    <file>resources/smileys/xlaugh.svg</file>
+    
   </qresource>
 </RCC>

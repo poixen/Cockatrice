@@ -160,4 +160,30 @@ QPixmap UserLevelPixmapGenerator::generatePixmap(int height, UserLevelFlags user
     return pixmap;
 }
 
+QMap<QString, QPixmap> SmileyPixmapGenerator::pmCache;
+
+QPixmap SmileyPixmapGenerator::generatePixmap(int height, QString smiley)
+{
+    QString key = smiley + QString::number(height);
+    if (pmCache.contains(key))
+        return pmCache.value(key);
+
+    QString smileyString;
+    if (smiley == QString(":D"))
+        smileyString = "laugh";
+
+    QSvgRenderer svg(QString(":/resources/smileys/" + smileyString + ".svg"));
+    
+
+    int width = (int) round(height * (double) svg.defaultSize().width() / (double) svg.defaultSize().height());
+    QPixmap pixmap(width, height);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    svg.render(&painter, QRectF(0, 0, width, height));
+
+    pmCache.insert(key, pixmap);
+    return pixmap;
+}
+
+
 QMap<int, QPixmap> UserLevelPixmapGenerator::pmCache;

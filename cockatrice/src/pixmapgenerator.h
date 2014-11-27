@@ -54,4 +54,12 @@ public:
     static void clear() { pmCache.clear(); }
 };
 
+class SmileyPixmapGenerator {
+private:
+    static QMap<QString, QPixmap> pmCache;
+public:
+    static QPixmap generatePixmap(int height, QString smiley);
+    static void clear() { pmCache.clear(); }
+};
+
 #endif
