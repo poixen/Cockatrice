@@ -171,18 +171,18 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
             from = 1;
     }
 
-    // todo need to split the string into an array of strings that would look like:
-    //[that is amazing ]
-    //[:D]
-    //[ where can i get one ]
-    //[:P]
-    // this can then be fed to the cursor and the smileys swapped out
-    if(message.contains(":D")) {
-        const int pixelSize = QFontInfo(cursor.charFormat().font()).pixelSize();
+    // check for smileys and add them in place of the text version
+    from = 0, index = 0;
+    const int pixelSize = QFontInfo(cursor.charFormat().font()).pixelSize();
+    //TODO need to check for each of the allowed smiley variants
+
+    while ((index = message.indexOf(":D", from)) != -1) {
+        cursor.insertText(message.left(index));
         cursor.insertImage(SmileyPixmapGenerator::generatePixmap(pixelSize, ":D").toImage());
-        message.remove(":D");
+        message.remove(0, index + 2);
     }
 
+    // insert the rest of the message 
     if (!message.isEmpty())
         cursor.insertText(message);
     
