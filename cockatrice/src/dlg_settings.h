@@ -8,6 +8,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QColor>
+#include "colorwheel.h"
 
 class CardDatabase;
 class QListWidget;
@@ -156,11 +158,13 @@ public:
 private slots:
     void actAdd();
     void actRemove();
+    void storeChatHighlightColor(const QColor &color);
 private:
     QListWidget *messageList;
     QAction *aAdd;
     QAction *aRemove;
     QCheckBox chatMentionCheckBox;
+    ColorWheel colorWheel;
     QGroupBox *chatGroupBox;
     QGroupBox *messageShortcuts;
 

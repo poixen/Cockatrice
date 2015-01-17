@@ -2,6 +2,7 @@
 #define SETTINGSCACHE_H
 
 #include <QObject>
+#include <QColor>
 
 #define PIC_URL_DEFAULT "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=!cardid!&type=card"
 #define PIC_URL_FALLBACK "http://mtgimage.com/set/!setcode!/!name!.jpg"
@@ -69,6 +70,7 @@ private:
     QString picUrlHqFallback;
     bool attemptAutoConnect;
     int pixmapCacheSize;
+    QColor chatHightlightColor;
 public:
     SettingsCache();
     const QByteArray &getMainWindowGeometry() const { return mainWindowGeometry; }
@@ -96,6 +98,7 @@ public:
     int getMinPlayersForMultiColumnLayout() const { return minPlayersForMultiColumnLayout; }
     bool getTapAnimation() const { return tapAnimation; }
     bool getChatMention()  const { return chatMention; }
+    QColor getChatHighlightColor() const { return chatHightlightColor; }
     bool getZoneViewSortByName() const { return zoneViewSortByName; }
     bool getZoneViewSortByType() const { return zoneViewSortByType; }
     bool getSoundEnabled() const { return soundEnabled; }
@@ -136,6 +139,7 @@ public slots:
     void setMinPlayersForMultiColumnLayout(int _minPlayersForMultiColumnLayout);
     void setTapAnimation(int _tapAnimation);
     void setChatMention(int _chatMention);
+    void setChatHighlightColor(const QColor &_chatHighlightColor);
     void setZoneViewSortByName(int _zoneViewSortByName);
     void setZoneViewSortByType(int _zoneViewSortByType);
     void setSoundEnabled(int _soundEnabled);

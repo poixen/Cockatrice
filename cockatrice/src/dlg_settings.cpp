@@ -26,6 +26,7 @@
 #include "settingscache.h"
 #include "priceupdater.h"
 #include "soundengine.h"
+#include "colorwheel.h"
 
 GeneralSettingsPage::GeneralSettingsPage()
 {
@@ -571,11 +572,13 @@ void DeckEditorSettingsPage::radioPriceTagSourceClicked(bool checked)
 
 MessagesSettingsPage::MessagesSettingsPage()
 {
-
+    colorWheel.setColor(settingsCache->getChatHighlightColor());
+    connect(&colorWheel, SIGNAL(colorChange(const QColor &color)), this, SLOT(storeChatHighlightColor(const QColor &color)));
     chatMentionCheckBox.setChecked(settingsCache->getChatMention());
     connect(&chatMentionCheckBox, SIGNAL(stateChanged(int)), settingsCache, SLOT(setChatMention(int)));
     QGridLayout *chatGrid = new QGridLayout;
     chatGrid->addWidget(&chatMentionCheckBox, 0, 0);
+    chatGrid->addWidget(&colorWheel, 1, 0);
     chatGroupBox = new QGroupBox;
     chatGroupBox->setLayout(chatGrid);
 
@@ -611,6 +614,10 @@ MessagesSettingsPage::MessagesSettingsPage()
     setLayout(mainLayout);
     
     retranslateUi();
+}
+
+void MessagesSettingsPage::storeChatHighlightColor(const QColor &color) {
+    settingsCache->setChatHighlightColor(color);
 }
 
 void MessagesSettingsPage::storeSettings()

@@ -104,7 +104,7 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
     QTextCharFormat senderFormat;
     if (tabSupervisor && tabSupervisor->getUserInfo() && (sender == QString::fromStdString(tabSupervisor->getUserInfo()->name()))) {
         senderFormat.setFontWeight(QFont::Bold);
-        senderFormat.setForeground(QBrush(QColor(255, 120, 0)));
+        senderFormat.setForeground(QBrush(settingsCache->getChatHighlightColor()));
     } else {
         senderFormat.setForeground(Qt::blue);
         if (playerBold)
@@ -174,7 +174,7 @@ void ChatView::appendMessage(QString message, QString sender, UserLevelFlags use
     if (settingsCache->getChatMention()) {
         if (message.toLower().contains("@" + QString::fromStdString(tabSupervisor->getUserInfo()->name()).toLower())) {
             messageFormat.setFontWeight(QFont::Bold);
-            messageFormat.setForeground(QBrush(QColor(255, 120, 0)));
+            messageFormat.setForeground(QBrush(settingsCache->getChatHighlightColor()));
         } 
     }
 
