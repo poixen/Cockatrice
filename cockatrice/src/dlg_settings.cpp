@@ -20,6 +20,7 @@
 #include <QDialogButtonBox>
 #include <QRadioButton>
 #include <QDebug>
+#include <QPalette>
 #include "carddatabase.h"
 #include "dlg_settings.h"
 #include "main.h"
@@ -572,13 +573,19 @@ void DeckEditorSettingsPage::radioPriceTagSourceClicked(bool checked)
 
 MessagesSettingsPage::MessagesSettingsPage()
 {
-    colorWheel.setColor(settingsCache->getChatHighlightColor());
-    connect(&colorWheel, SIGNAL(colorChange(const QColor &color)), this, SLOT(storeChatHighlightColor(const QColor &color)));
+    colorWheel= new ColorWheel(this);
+    colorWheel->setColor(settingsCache->getChatHighlightColor());
+    connect(colorWheel, SIGNAL(colorChange(QColor)), this, SLOT(storeChatHighlightColor(QColor)));
+
+    setPreviewColor(settingsCache->getChatHighlightColor());
+    
     chatMentionCheckBox.setChecked(settingsCache->getChatMention());
     connect(&chatMentionCheckBox, SIGNAL(stateChanged(int)), settingsCache, SLOT(setChatMention(int)));
+    
     QGridLayout *chatGrid = new QGridLayout;
     chatGrid->addWidget(&chatMentionCheckBox, 0, 0);
-    chatGrid->addWidget(&colorWheel, 1, 0);
+    chatGrid->addWidget(colorWheel, 1, 0);
+    chatGrid->addWidget(&colorPreview, 1, 1);
     chatGroupBox = new QGroupBox;
     chatGroupBox->setLayout(chatGrid);
 
@@ -618,6 +625,15 @@ MessagesSettingsPage::MessagesSettingsPage()
 
 void MessagesSettingsPage::storeChatHighlightColor(const QColor &color) {
     settingsCache->setChatHighlightColor(color);
+    
+    setPreviewColor(color);
+}
+
+void MessagesSettingsPage::setPreviewColor(const QColor &color) {
+    int red = color.red();
+    int green = color.green();
+    int blue = color.blue();
+    colorPreview.setStyleSheet("QLabel {background-color : white; color : rgb(" + QString::number(red) + "," + QString::number(green) + "," + QString::number(blue) + "); font-weight: bold;}");
 }
 
 void MessagesSettingsPage::storeSettings()
@@ -654,6 +670,7 @@ void MessagesSettingsPage::retranslateUi()
     chatGroupBox->setTitle(tr("Chat settings"));
     chatMentionCheckBox.setText(tr("Enable chat mentions ('@yourusername' in chat log will be highlighted)"));
     messageShortcuts->setTitle(tr("In-game message macros"));
+    colorPreview.setText(tr("Chat preview"));
 }
 
 DlgSettings::DlgSettings(QWidget *parent)

@@ -45,7 +45,7 @@ SettingsCache::SettingsCache()
     minPlayersForMultiColumnLayout = settings->value("interface/min_players_multicolumn", 5).toInt();
     tapAnimation = settings->value("cards/tapanimation", true).toBool();
     chatMention = settings->value("chat/mention", true).toBool();
-    chatHightlightColor = settings->value("chat/highlightcolor", QColor(100, 100, 100)).value<QColor>();
+    chatHightlightColor = settings->value("chat/highlightcolor", QColor(255, 0, 0)).value<QColor>();
 
     zoneViewSortByName = settings->value("zoneview/sortbyname", true).toBool();
     zoneViewSortByType = settings->value("zoneview/sortbytype", true).toBool();

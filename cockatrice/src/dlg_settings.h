@@ -163,12 +163,14 @@ private:
     QListWidget *messageList;
     QAction *aAdd;
     QAction *aRemove;
+    QLabel colorPreview;
     QCheckBox chatMentionCheckBox;
-    ColorWheel colorWheel;
+    ColorWheel *colorWheel;
     QGroupBox *chatGroupBox;
     QGroupBox *messageShortcuts;
 
     void storeSettings();
+    void setPreviewColor(const QColor &color);
 };
 
 class DlgSettings : public QDialog {

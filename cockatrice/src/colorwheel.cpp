@@ -7,7 +7,7 @@
 
 ColorWheel::ColorWheel(QWidget *parent) :
     QWidget(parent),
-    initSize(10,10),
+    initSize(200,200),
     mouseDown(false),
     margin(0),
     wheelWidth(30),
@@ -149,6 +149,7 @@ void ColorWheel::mouseReleaseEvent(QMouseEvent *)
     mouseDown = false;
     inWheel = false;
     inSquare = false;
+    emit colorChange(current);
 }
 
 void ColorWheel::resizeEvent(QResizeEvent *event)
@@ -321,7 +322,7 @@ void ColorWheel::hueChanged(const int &hue)
     //drawIndicator(hue);
     //drawPicker(current);
     repaint();
-    emit colorChange(current);
+    //emit colorChange(current);
 }
 
 void ColorWheel::svChanged(const QColor &newcolor)
@@ -335,5 +336,5 @@ void ColorWheel::svChanged(const QColor &newcolor)
     //drawIndicator(hue);
     //drawPicker(newcolor);
     repaint();
-    emit colorChange(current);
+    //emit colorChange(current);
 }
