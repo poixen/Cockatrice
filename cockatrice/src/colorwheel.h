@@ -15,6 +15,10 @@ public:
     
 signals:
     void colorChange(const QColor &color);
+    /**
+       Returns the final set color after mouse up
+     */
+    void finalColor(const QColor &color); 
     
 public slots:
     void setColor(const QColor &color);

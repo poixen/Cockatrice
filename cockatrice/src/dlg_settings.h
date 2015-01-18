@@ -159,6 +159,7 @@ private slots:
     void actAdd();
     void actRemove();
     void storeChatHighlightColor(const QColor &color);
+    void setPreviewColor(const QColor &color);
 private:
     QListWidget *messageList;
     QAction *aAdd;
@@ -170,7 +171,6 @@ private:
     QGroupBox *messageShortcuts;
 
     void storeSettings();
-    void setPreviewColor(const QColor &color);
 };
 
 class DlgSettings : public QDialog {

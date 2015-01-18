@@ -575,7 +575,10 @@ MessagesSettingsPage::MessagesSettingsPage()
 {
     colorWheel= new ColorWheel(this);
     colorWheel->setColor(settingsCache->getChatHighlightColor());
-    connect(colorWheel, SIGNAL(colorChange(QColor)), this, SLOT(storeChatHighlightColor(QColor)));
+    // when selecting a color (click and drag) update the preview
+    connect(colorWheel, SIGNAL(colorChange(QColor)), this, SLOT(setPreviewColor(QColor)));
+    // when releasing the mouse we store the value.
+    connect(colorWheel, SIGNAL(finalColor(QColor)), this, SLOT(storeChatHighlightColor(QColor)));
 
     setPreviewColor(settingsCache->getChatHighlightColor());
     
@@ -625,8 +628,6 @@ MessagesSettingsPage::MessagesSettingsPage()
 
 void MessagesSettingsPage::storeChatHighlightColor(const QColor &color) {
     settingsCache->setChatHighlightColor(color);
-    
-    setPreviewColor(color);
 }
 
 void MessagesSettingsPage::setPreviewColor(const QColor &color) {

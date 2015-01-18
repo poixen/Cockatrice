@@ -5,6 +5,11 @@
 #include <QtCore/qmath.h>
 #include <QDebug>
 
+/**
+   Credit to liuyanghejerry for the original source code.
+   Permission to use code can be found her : http://qt-project.org/forums/viewthread/19757
+ */
+
 ColorWheel::ColorWheel(QWidget *parent) :
     QWidget(parent),
     initSize(200,200),
@@ -15,9 +20,7 @@ ColorWheel::ColorWheel(QWidget *parent) :
     inWheel(false),
     inSquare(false)
 {
-    //    resize(initSize);
     current = current.toHsv();
-//    setMinimumSize(200,200);
 }
 
 QColor ColorWheel::color()
@@ -27,15 +30,13 @@ QColor ColorWheel::color()
 
 void ColorWheel::setColor(const QColor &color)
 {
-    if(color == current) return;
-    if(color.hue() != current.hue()){
+    if(color == current) 
+        return;
+    if(color.hue() != current.hue())
         hueChanged(color.hue());
-    }
 
-    if( color.saturation() != current.saturation()
-            || color.value() != current.value() ){
+    if( color.saturation() != current.saturation() || color.value() != current.value() )
         svChanged(color);
-    }
 
     update();
     emit colorChange(color);
@@ -44,7 +45,8 @@ void ColorWheel::setColor(const QColor &color)
 
 QColor ColorWheel::posColor(const QPoint &point)
 {
-    if( ! wheel.rect().contains(point) ) return QColor();
+    if( ! wheel.rect().contains(point) ) 
+        return QColor();
     if(inWheel){
         qreal hue = 0;
         int r = qMin(width(), height()) / 2;
@@ -125,22 +127,6 @@ void ColorWheel::mouseMoveEvent(QMouseEvent *event)
     }else if(squareRegion.contains(lastPos) && inSquare){
         QColor color = posColor(lastPos);
         svChanged(color);
-    }else{
-        // TODO: due with cursor out of region after press
-        //        int length = qMin(width(), height());
-        //        QPoint center(length/2, length/2);
-        //        int R = qSqrt(qPow(qAbs(lastPos.x()), 2)
-        //                      + qPow(qAbs(lastPos.y()), 2));
-        //        if(inWheel){
-        //            int r =  length / 2;
-        //            r += qSqrt(qPow(center.x(), 2) + qPow(center.y(), 2));
-        //            int x0 = r/R * qAbs(lastPos.x());
-        //            int y0 = r/R * qAbs(lastPos.y());
-        //            QColor color = posColor(QPoint(x0, y0));
-        //            hueChanged(color.hue());
-        //        }else if(inSquare){
-        //            //
-        //        }
     }
 }
 
@@ -149,7 +135,7 @@ void ColorWheel::mouseReleaseEvent(QMouseEvent *)
     mouseDown = false;
     inWheel = false;
     inSquare = false;
-    emit colorChange(current);
+    emit finalColor(current);
 }
 
 void ColorWheel::resizeEvent(QResizeEvent *event)
@@ -178,7 +164,6 @@ void ColorWheel::drawWheelImage(const QSize &newSize)
 
     QStyleOption option;
     option.initFrom(this);
-    //    QStyle::State state = option.state;
 
     QBrush background = option.palette.window();
 
@@ -219,9 +204,6 @@ void ColorWheel::drawWheelImage(const QSize &newSize)
 
 void ColorWheel::drawSquareImage(const int &hue)
 {
-//    QPainter painter(&squarePixmap);
-//    painter.setRenderHint(QPainter::Antialiasing);
-
     // region of the widget
     int w = qMin(width(), height());
     // radius of outer circle
@@ -230,8 +212,6 @@ void ColorWheel::drawSquareImage(const int &hue)
     qreal ir = r-wheelWidth;
     // left corner of square
     qreal m = w/2.0-ir/qSqrt(2);
-    //painter.translate(m, m);
-    //painter.setPen(Qt::NoPen);
     QImage square(255,255, QImage::Format_ARGB32_Premultiplied);
     QColor color;
     QRgb vv;
@@ -244,11 +224,6 @@ void ColorWheel::drawSquareImage(const int &hue)
     }
     qreal SquareWidth = 2*ir/qSqrt(2);
     squareImage = square.scaled(SquareWidth,SquareWidth);
-//    painter.drawImage(0,0,square);
-
-    //    QPainter painter2(&wheel);
-    //    painter2.drawImage(0,0,source);
-
     squareRegion = QRegion(m, m, SquareWidth, SquareWidth);
 }
 
@@ -317,12 +292,9 @@ void ColorWheel::hueChanged(const int &hue)
     int v = current.value();
     current.setHsv(hue, s, v);
     if(!isVisible()) return;
-    //drawWheel(size());
     drawSquareImage(hue);
-    //drawIndicator(hue);
-    //drawPicker(current);
     repaint();
-    //emit colorChange(current);
+    emit colorChange(current);
 }
 
 void ColorWheel::svChanged(const QColor &newcolor)
@@ -331,10 +303,6 @@ void ColorWheel::svChanged(const QColor &newcolor)
     current.setHsv(hue, newcolor.saturation(),
                    newcolor.value());
     if(!isVisible()) return;
-    //drawWheel(size());
-    //drawSquare(hue);
-    //drawIndicator(hue);
-    //drawPicker(newcolor);
     repaint();
-    //emit colorChange(current);
+    emit colorChange(current);
 }
