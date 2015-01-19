@@ -587,7 +587,7 @@ MessagesSettingsPage::MessagesSettingsPage()
     
     QGridLayout *chatGrid = new QGridLayout;
     chatGrid->addWidget(&chatMentionCheckBox, 0, 0);
-    chatGrid->addWidget(colorWheel, 1, 0);
+    chatGrid->addWidget(colorWheel, 1, 0, Qt::AlignCenter);
     chatGrid->addWidget(&colorPreview, 1, 1);
     chatGroupBox = new QGroupBox;
     chatGroupBox->setLayout(chatGrid);
@@ -634,7 +634,7 @@ void MessagesSettingsPage::setPreviewColor(const QColor &color) {
     int red = color.red();
     int green = color.green();
     int blue = color.blue();
-    colorPreview.setStyleSheet("QLabel {background-color : white; color : rgb(" + QString::number(red) + "," + QString::number(green) + "," + QString::number(blue) + "); font-weight: bold;}");
+    colorPreview.setStyleSheet("QLabel {background-color : white; color : rgb(" + QString::number(red) + "," + QString::number(green) + "," + QString::number(blue) + "); font-weight: bold; border: 1px solid black;}");
 }
 
 void MessagesSettingsPage::storeSettings()
