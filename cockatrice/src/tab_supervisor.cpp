@@ -15,6 +15,7 @@
 #include "settingscache.h"
 #include <QDebug>
 #include <QPainter>
+#include "widgetdetacher.h"
 
 #include "pb/room_commands.pb.h"
 #include "pb/room_event.pb.h"
@@ -137,6 +138,7 @@ AbstractClient *TabSupervisor::getClient() const
 
 int TabSupervisor::myAddTab(Tab *tab)
 {
+    WidgetDetacher *x = new WidgetDetacher(this, tab);
     connect(tab, SIGNAL(userEvent(bool)), this, SLOT(tabUserEvent(bool)));
     connect(tab, SIGNAL(tabTextChanged(Tab *, QString)), this, SLOT(updateTabText(Tab *, QString)));
     return addTab(tab, tab->getTabText());
