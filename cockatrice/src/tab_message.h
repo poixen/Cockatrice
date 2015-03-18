@@ -30,6 +30,7 @@ private slots:
     void actLeave();
     void messageSent(const Response &response);
     void addMentionTag(QString mentionTag);
+    void messageClicked();
 public:
     TabMessage(TabSupervisor *_tabSupervisor, AbstractClient *_client, const ServerInfo_User &_ownUserInfo, const ServerInfo_User &_otherUserInfo);
     ~TabMessage();

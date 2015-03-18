@@ -6,6 +6,9 @@
 #include "tab_message.h"
 #include "abstractclient.h"
 #include "chatview.h"
+#include "main.h"
+#include <QSystemTrayIcon>
+#include <QApplication>
 
 #include "pending_command.h"
 #include "pb/session_commands.pb.h"
@@ -107,7 +110,19 @@ void TabMessage::processUserMessageEvent(const Event_UserMessage &event)
 {
     const UserLevelFlags userLevel(event.sender_name() == otherUserInfo->name() ? otherUserInfo->user_level() : ownUserInfo->user_level());
     chatView->appendMessage(QString::fromStdString(event.message()), QString::fromStdString(event.sender_name()), userLevel);
+    if ((event.sender_name() == otherUserInfo->name() && 
+        tabSupervisor->currentIndex() != tabSupervisor->indexOf(this)) ||
+        QApplication::activeWindow() == 0 || QApplication::focusWidget() == 0) {
+        trayIcon->showMessage(tr("Message from ") + otherUserInfo->name().c_str(), event.message().c_str());
+        connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
+    }
+
     emit userEvent();
+}
+
+void TabMessage::messageClicked() {
+    tabSupervisor->setCurrentIndex(tabSupervisor->indexOf(this));
+    QApplication::setActiveWindow(this);
 }
 
 void TabMessage::processUserLeft()
