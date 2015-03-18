@@ -593,6 +593,9 @@ MessagesSettingsPage::MessagesSettingsPage()
     updateMentionPreview();
     connect(mentionColor, SIGNAL(textChanged(QString)), this, SLOT(updateColor(QString)));
 
+    messagePopups.setChecked(settingsCache->getShowMessagePopup());
+    connect(&messagePopups, SIGNAL(stateChanged(int)), settingsCache, SLOT(setShowMessagePopups(int)));
+
     QGridLayout *chatGrid = new QGridLayout;
     chatGrid->addWidget(&chatMentionCheckBox, 0, 0);
     chatGrid->addWidget(&invertMentionForeground, 0, 1);
@@ -600,6 +603,7 @@ MessagesSettingsPage::MessagesSettingsPage()
     chatGrid->addWidget(&ignoreUnregUsersMainChat, 1, 0);
     chatGrid->addWidget(&hexLabel, 1, 2);
     chatGrid->addWidget(&ignoreUnregUserMessages, 2, 0);
+    chatGrid->addWidget(&messagePopups, 3, 0);
     chatGroupBox = new QGroupBox;
     chatGroupBox->setLayout(chatGrid);
 
@@ -694,6 +698,7 @@ void MessagesSettingsPage::retranslateUi()
     ignoreUnregUsersMainChat.setText(tr("Ignore chat room messages sent by unregistered users."));
     ignoreUnregUserMessages.setText(tr("Ignore private messages sent by unregistered users."));
     invertMentionForeground.setText(tr("Invert text color"));
+    messagePopups.setText(tr("Enable popup messages."));
     hexLabel.setText(tr("(Color is hexadecimal)"));
 }
 

@@ -7,6 +7,7 @@
 #include "abstractclient.h"
 #include "chatview.h"
 #include "main.h"
+#include "settingscache.h"
 #include <QSystemTrayIcon>
 #include <QApplication>
 
@@ -110,7 +111,8 @@ void TabMessage::processUserMessageEvent(const Event_UserMessage &event)
 {
     const UserLevelFlags userLevel(event.sender_name() == otherUserInfo->name() ? otherUserInfo->user_level() : ownUserInfo->user_level());
     chatView->appendMessage(QString::fromStdString(event.message()), QString::fromStdString(event.sender_name()), userLevel);
-    if ((event.sender_name() == otherUserInfo->name() && 
+    if (settingsCache->getShowMessagePopup() &&
+        (event.sender_name() == otherUserInfo->name() && 
         tabSupervisor->currentIndex() != tabSupervisor->indexOf(this)) ||
         QApplication::activeWindow() == 0 || QApplication::focusWidget() == 0) {
         trayIcon->showMessage(tr("Message from ") + otherUserInfo->name().c_str(), event.message().c_str());

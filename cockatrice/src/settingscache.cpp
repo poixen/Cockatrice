@@ -73,6 +73,12 @@ SettingsCache::SettingsCache()
     ignoreUnregisteredUserMessages = settings->value("chat/ignore_unregistered_messages", false).toBool();
 
     attemptAutoConnect = settings->value("server/auto_connect", 0).toBool(); 
+    showMessagePopups = settings->value("chat/showmessagepopups", true).toBool();
+}
+
+void SettingsCache::setShowMessagePopups(const int _showMessagePopups) {
+    showMessagePopups = _showMessagePopups;
+    settings->setValue("chat/showmessagepopups", showMessagePopups);
 }
 
 void SettingsCache::setLang(const QString &_lang)
