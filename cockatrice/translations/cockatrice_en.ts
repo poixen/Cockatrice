@@ -3035,6 +3035,11 @@ Local version is %1, remote version is %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/dlg_settings.cpp" line="701"/>
+        <source>Enable popup messages.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/dlg_settings.cpp" line="696"/>
         <source>Invert text color</source>
         <translation type="unfinished"></translation>
