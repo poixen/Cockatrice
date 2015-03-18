@@ -62,11 +62,22 @@ private:
     void retranslateUi();
     void createActions();
     void createMenus();
+
+    void createTrayIcon();
+    void createTrayActions();
+
     QList<QMenu *> tabMenus;
     QMenu *cockatriceMenu, *helpMenu;
     QAction *aConnect, *aDisconnect, *aSinglePlayer, *aWatchReplay, *aDeckEditor, *aFullScreen, *aSettings, *aExit,
         *aAbout;
     TabSupervisor *tabSupervisor;
+
+    QMenu *trayIconMenu;
+
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *closeAction;
 
     RemoteClient *client;
     QThread *clientThread;

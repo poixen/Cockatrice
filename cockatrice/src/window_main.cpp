@@ -28,6 +28,7 @@
 #include <QFileDialog>
 #include <QThread>
 #include <QDateTime>
+#include <QSystemTrayIcon>
 
 #include "main.h"
 #include "window_main.h"
@@ -413,6 +414,11 @@ MainWindow::MainWindow(QWidget *parent)
     resize(900, 700);
     restoreGeometry(settingsCache->getMainWindowGeometry());
     aFullScreen->setChecked(windowState() & Qt::WindowFullScreen);
+
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        createTrayActions();
+        createTrayIcon();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -420,6 +426,36 @@ MainWindow::~MainWindow()
     client->deleteLater();
     clientThread->wait();
 }
+
+void MainWindow::createTrayIcon() {
+    QMenu *trayIconMenu = new QMenu();
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(closeAction);
+    
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setIcon(QIcon(":/resources/appicon.svg"));
+    trayIcon->show();
+}
+
+
+void MainWindow::createTrayActions() {
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+    closeAction = new QAction(tr("&Close"), this);
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
+}
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
