@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTextStream>
+#include <QProcessEnvironment>
 #include "tab_deck_editor.h"
 #include "window_sets.h"
 #include "carddatabase.h"
@@ -228,6 +229,8 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     connect(aAnalyzeDeck, SIGNAL(triggered()), this, SLOT(actAnalyzeDeck()));
     aClose = new QAction(QString(), this);
     connect(aClose, SIGNAL(triggered()), this, SLOT(closeRequest()));
+    aOpenCustomFolder = new QAction(QString(), this);
+    connect(aOpenCustomFolder, SIGNAL(triggered()), this, SLOT(actOpenCustomFolder()));
 
     aEditSets = new QAction(QString(), this);
     connect(aEditSets, SIGNAL(triggered()), this, SLOT(actEditSets()));
@@ -244,6 +247,10 @@ TabDeckEditor::TabDeckEditor(TabSupervisor *_tabSupervisor, QWidget *parent)
     deckMenu->addAction(aSaveDeckToClipboard);
     deckMenu->addSeparator();
     deckMenu->addAction(aPrintDeck);
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+    deckMenu->addSeparator();
+    deckMenu->addAction(aOpenCustomFolder);
+#endif
     deckMenu->addSeparator();
     deckMenu->addAction(aAnalyzeDeck);
     deckMenu->addSeparator();
@@ -311,6 +318,7 @@ void TabDeckEditor::retranslateUi()
     aSaveDeckToClipboard->setText(tr("Save deck to clip&board"));
     aPrintDeck->setText(tr("&Print deck..."));
     aAnalyzeDeck->setText(tr("&Analyze deck on deckstats.net"));
+    aOpenCustomFolder->setText(tr("Open custom image folder"));
     aClose->setText(tr("&Close"));
     aClose->setShortcut(tr("Ctrl+Q"));
     
@@ -521,6 +529,31 @@ void TabDeckEditor::actAnalyzeDeck()
         this
     ); // it deletes itself when done
     interface->analyzeDeck(deckModel->getDeckList());
+}
+
+
+void TabDeckEditor::actOpenCustomFolder() {
+
+#if defined(Q_OS_MAC)
+    QStringList args;
+    args << "-e";
+    args << "tell application \"Finder\"";
+    args << "-e";
+    args << "activate";
+    args << "-e";
+    args << "POSIX file \"" + settingsCache->getPicsPath() + "/CUSTOM" + "\"";
+    args << "-e";
+    args << "end tell";
+    QProcess::startDetached("osascript", args);
+#endif
+#if defined(Q_OS_WIN)
+    QStringList args;
+    QString pathToFolder = settingsCache->getPicsPath().append("/CUSTOM");
+    std::string lsakdfj = pathToFolder.toStdString();
+    args << QDir::toNativeSeparators(pathToFolder);
+    QProcess::startDetached("explorer", args);
+#endif
+
 }
 
 void TabDeckEditor::actEditSets()

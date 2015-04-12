@@ -47,6 +47,7 @@ private slots:
     void actSaveDeckToClipboard();
     void actPrintDeck();
     void actAnalyzeDeck();
+    void actOpenCustomFolder();
 
     void actEditSets();
     void actEditTokens();
@@ -97,7 +98,7 @@ private:
     QTreeView *filterView;
 
     QMenu *deckMenu, *dbMenu;
-    QAction *aNewDeck, *aLoadDeck, *aSaveDeck, *aSaveDeckAs, *aLoadDeckFromClipboard, *aSaveDeckToClipboard, *aPrintDeck, *aAnalyzeDeck, *aClose;
+    QAction *aNewDeck, *aLoadDeck, *aSaveDeck, *aSaveDeckAs, *aLoadDeckFromClipboard, *aSaveDeckToClipboard, *aPrintDeck, *aAnalyzeDeck, *aClose, *aOpenCustomFolder;
     QAction *aEditSets, *aEditTokens, *aClearSearch, *aCardTextOnly;
     QAction *aAddCard, *aAddCardToSideboard, *aRemoveCard, *aIncrement, *aDecrement;// *aUpdatePrices;
     
