@@ -732,7 +732,11 @@ void Servatrice_DatabaseInterface::storeDeckMeta(const QString &userName, const 
     checkSql();
     QSqlQuery *query = prepareQuery("insert into {prefix}_decks_played (id, creator, uploadtime, content, deckname, format) values (NULL, :username, NOW(), :content, :deckname, :format)");
     query->bindValue(":username", userName);
-    query->bindValue(":content", deck->getCardList());
+    QString deckList = "";
+    QListIterator<QString> it(deck->getCardList());
+    while(it.hasNext())
+        deckList.append(it.next()).append(" ");
+    query->bindValue(":content", deckList);
     query->bindValue(":deckname", deck->getName());
     QString gameTypesStr = "";
     QListIterator<int> i(gameTypes);
