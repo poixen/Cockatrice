@@ -47,7 +47,7 @@ public:
     bool checkUserIsBanned(Server_ProtocolHandler *session, QString &banReason, int &banSecondsRemaining);
     virtual bool changeUserPassword(const QString & /* user */, const QString & /* oldPassword */, const QString & /* newPassword */) { return true; };
     virtual QChar getGenderChar(ServerInfo_User_Gender const & /* gender */) { return QChar('u'); };
-    virtual void storeDeckMeta(const QString & /*userName*/, const DeckList* /*deck*/, const QList<int> /*gameTypes*/) { };
+    virtual void storeDeckMeta(const QString & /*userName*/, DeckList* /*deck*/, const QList<int> /*gameTypes*/) { };
 };
 
 #endif

@@ -76,7 +76,7 @@ public:
         LogMessage_TargetType targetType, const int targetId, const QString &targetName);
     bool changeUserPassword(const QString &user, const QString &oldPassword, const QString &newPassword);
     QChar getGenderChar(ServerInfo_User_Gender const &gender);
-    void storeDeckMeta(const QString &userName, const DeckList* deck, const QList<int> gameTypes);
+    void storeDeckMeta(const QString &userName, DeckList* deck, const QList<int> gameTypes);
 };
 
 #endif

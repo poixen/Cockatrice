@@ -727,7 +727,7 @@ DeckList *Servatrice_DatabaseInterface::getDeckFromDatabase(int deckId, int user
     return deck;
 }
 
-void Servatrice_DatabaseInterface::storeDeckMeta(const QString &userName, const DeckList* deck, const QList<int> gameTypes) {
+void Servatrice_DatabaseInterface::storeDeckMeta(const QString &userName, DeckList* deck, const QList<int> gameTypes) {
 
     checkSql();
     QSqlQuery *query = prepareQuery("insert into {prefix}_decks_played (id, creator, uploadtime, content, deckname, format) values (NULL, :username, NOW(), :content, :deckname, :format)");
