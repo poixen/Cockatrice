@@ -727,6 +727,21 @@ DeckList *Servatrice_DatabaseInterface::getDeckFromDatabase(int deckId, int user
     return deck;
 }
 
+void Servatrice_DatabaseInterface::storeDeckMeta(const QString &userName, const DeckList* deck, const QList<int> gameTypes) {
+
+    checkSql();
+    QSqlQuery *query = prepareQuery("insert into {prefix}_decks_played (id, creator, uploadtime, content, deckname, format) values (NULL, :username, NOW(), :content, :deckname, :format)");
+    query->bindValue(":username", userName);
+    query->bindValue(":content", deck->getCardList());
+    query->bindValue(":deckname", deck->getName());
+    QString gameTypesStr = "";
+    QListIterator<int> i(gameTypes);
+    while(i.hasNext())
+        gameTypesStr.append(QString::number(i.next())).append(" ");
+    query->bindValue(":format", gameTypesStr);
+    execSqlQuery(query);
+}
+
 void Servatrice_DatabaseInterface::logMessage(const int senderId, const QString &senderName, const QString &senderIp, const QString &logMessage, LogMessage_TargetType targetType, const int targetId, const QString &targetName)
 {
     QString targetTypeString;

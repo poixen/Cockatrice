@@ -652,6 +652,8 @@ Response::ResponseCode Server_Player::cmdDeckSelect(const Command_DeckSelect &cm
     delete deck;
     deck = newDeck;
     sideboardLocked = true;
+
+    game->getRoom()->getServer()->getDatabaseInterface()->storeDeckMeta(QString(userInfo->name().c_str()), deck, game->getGameTypes());
     
     Event_PlayerPropertiesChanged event;
     event.mutable_player_properties()->set_sideboard_locked(true);

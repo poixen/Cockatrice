@@ -91,6 +91,7 @@ public:
     bool getGameStarted() const { return gameStarted; }
     int getPlayerCount() const;
     int getSpectatorCount() const;
+    QList<int> getGameTypes() { return gameTypes; }
     const QMap<int, Server_Player *> &getPlayers() const { return players; }
     int getGameId() const { return gameId; }
     QString getDescription() const { return description; }
@@ -122,6 +123,7 @@ public:
     GameEventContext prepareGameEventContext(const ::google::protobuf::Message &gameEventContext);
     
     void sendGameEventContainer(GameEventContainer *cont, GameEventStorageItem::EventRecipients recipients = GameEventStorageItem::SendToPrivate | GameEventStorageItem::SendToOthers, int privatePlayerId = -1);
+   
 };
 
 #endif
