@@ -7,6 +7,7 @@
 ---
 
 # Cockatrice
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/poixen/Cockatrice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Cockatrice is an open-source multiplatform software for playing card games,
 such as Magic: The Gathering, over a network. It is fully client-server based
